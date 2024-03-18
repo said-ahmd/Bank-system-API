@@ -1,0 +1,13 @@
+package org.fawry.bankapisystem;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class BankApiSystemApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
