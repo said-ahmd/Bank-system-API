@@ -36,16 +36,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountResponseDto createAccount() {
-        User user = getCurrentUser();
+        User user = userService.getCurrentUser();
         Account createdAccount = accountCreatorService.createAccount(user);
         return  accountResponsMapper.toResponse(createdAccount);
     }
 
-    private User getCurrentUser() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userService.findUserByEmail(userEmail);
-        return userByEmail;
-    }
+
 
     @Override
     public List<AccountResponseDto> getUserAccounts() {
@@ -64,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean isAccountExists(String cardNumber, String cvv) {
-        return false;
+        return  accountRepository.existsByCardNumberAndCVV(cardNumber,cvv);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class AccountCreatorServiceImpl implements AccountCreatorService {
 
     public String getUniqueCardNumber(){
         String cardNumber = generateCardNumber();
-        while (accountRepository.existsAccountByCardNumber(cardNumber)){
+        while (accountRepository.existsByCardNumber(cardNumber)){
             cardNumber = generateCardNumber();
         }
         return cardNumber;

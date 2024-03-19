@@ -17,7 +17,7 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
     @Column(name = "amount",nullable = false)
-    private BigDecimal amount;
+    private double amount;
 
     @Column(name = "description",nullable = false)
     private String description;
@@ -31,4 +31,54 @@ public class Transaction {
     Account account;
 
 
+    public Transaction(){
+
+    }
+    public Transaction(TransactionType transactionType, double amount, String description, Timestamp createdAt, Account account) {
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.account = account;
+    }
+
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }

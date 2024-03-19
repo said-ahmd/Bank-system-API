@@ -25,20 +25,18 @@ public class SecurityConf {
         http
             .csrf(csrf->
                 csrf.disable()
-            );
-        http
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/bank/auth/**")
+                .requestMatchers("/bank/auth/**"
+                ,"/bank/transaction/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
-            );
-        http
+            )
            .sessionManagement(
                 session-> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-           );
-        http
+           )
           .authenticationProvider(authenticationProvider)
           .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

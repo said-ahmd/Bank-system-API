@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.fawry.bankapisystem.model.User;
 import org.fawry.bankapisystem.repository.UserRepository;
 import org.fawry.bankapisystem.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,5 +24,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    public User getCurrentUser() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = findUserByEmail(userEmail);
+        return userByEmail;
     }
 }

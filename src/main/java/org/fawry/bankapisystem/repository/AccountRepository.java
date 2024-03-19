@@ -4,5 +4,7 @@ import org.fawry.bankapisystem.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AccountRepository extends JpaRepository<Account,Long> {
-    boolean existsAccountByCardNumber(String cardNumber);
+    boolean existsByCardNumber(String cardNumber);
+    boolean existsByCardNumberAndCVV(String cardNumber,String CVV);
+    Account findByCardNumber(String cardNumber);
 }
