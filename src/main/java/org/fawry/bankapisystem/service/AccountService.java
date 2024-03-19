@@ -9,7 +9,7 @@ import org.fawry.bankapisystem.model.Account;
 import java.util.List;
 
 public interface AccountService {
-    Account createAccount();
+    AccountResponseDto createAccount();
     List<AccountResponseDto> getUserAccounts();
     //
     AccountActivityResponseDto deactivateAccount(int accountId);
