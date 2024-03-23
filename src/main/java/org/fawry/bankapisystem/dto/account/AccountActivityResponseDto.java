@@ -1,4 +1,4 @@
-package org.fawry.bankapisystem.dto;
+package org.fawry.bankapisystem.dto.account;
 
 public class AccountActivityResponseDto {
 }

@@ -1,4 +1,4 @@
-package org.fawry.bankapisystem.dto;
+package org.fawry.bankapisystem.dto.error;
 
 import org.springframework.http.HttpStatus;
 

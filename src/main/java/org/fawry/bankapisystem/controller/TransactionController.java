@@ -1,7 +1,8 @@
 package org.fawry.bankapisystem.controller;
 
-import org.fawry.bankapisystem.dto.GeneralResponseDto;
-import org.fawry.bankapisystem.dto.TransactionRequestDTO;
+import jakarta.validation.Valid;
+import org.fawry.bankapisystem.dto.transaction.DepositRequistDTO;
+import org.fawry.bankapisystem.dto.transaction.TransactionRequestDTO;
 import org.fawry.bankapisystem.service.TransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +18,17 @@ public class TransactionController {
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<GeneralResponseDto> deposit(@RequestBody TransactionRequestDTO transactionRequestDTO){
-        transactionService.deposit(transactionRequestDTO);
+    public ResponseEntity<String> deposit(@RequestBody @Valid DepositRequistDTO depositRequistDTO){
+        transactionService.deposit(depositRequistDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(
-                    new GeneralResponseDto(true)
-                );
+                .body("Succeed to deposit "+depositRequistDTO.getAmount()+" to card number "+ depositRequistDTO.getCardNumber());
     }
     @PostMapping("/withdraw")
-    public ResponseEntity<GeneralResponseDto> withdraw(@RequestBody TransactionRequestDTO transactionRequestDTO){
+    public ResponseEntity<String> withdraw(@RequestBody @Valid TransactionRequestDTO transactionRequestDTO){
         transactionService.withdraw(transactionRequestDTO);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(
-                    new GeneralResponseDto(true)
-                );
+                .body("Succeed to withdraw "+transactionRequestDTO.getAmount()+" from card number "+ transactionRequestDTO.getCardNumber());
     }
 }

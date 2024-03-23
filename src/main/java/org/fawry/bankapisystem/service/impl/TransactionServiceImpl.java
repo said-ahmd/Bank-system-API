@@ -1,6 +1,7 @@
 package org.fawry.bankapisystem.service.impl;
 
-import org.fawry.bankapisystem.dto.TransactionRequestDTO;
+import org.fawry.bankapisystem.dto.transaction.DepositRequistDTO;
+import org.fawry.bankapisystem.dto.transaction.TransactionRequestDTO;
 import org.fawry.bankapisystem.model.Account;
 import org.fawry.bankapisystem.model.Transaction;
 import org.fawry.bankapisystem.model.enumTypes.TransactionType;
@@ -29,13 +30,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void deposit(TransactionRequestDTO request) {
-        Account account = validateAccount(request);
+    public void deposit(DepositRequistDTO request) {
+        Account account = validateAccountForDeposit(request);
         doDeposit(account,request.getAmount());
     }
+
+
     @Override
     public void withdraw(TransactionRequestDTO request) {
-        Account account = validateAccount(request);
+        Account account = validateAccountForWithdraw(request);
         doWithdraw(account,request.getAmount());
 
     }
@@ -72,19 +75,32 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
     }
 
-    Account validateAccount(TransactionRequestDTO request){
+    private Account validateAccountForDeposit(DepositRequistDTO request) {
+        String cardNumber = request.getCardNumber();
+        boolean isAccountExisits = accountRepository.existsByCardNumber(cardNumber);
+        if(!isAccountExisits){
+            throw new IllegalArgumentException("The card with number "+cardNumber+" isn't exist.");
+        }
+        Account account = accountRepository.findByCardNumber(cardNumber);
+        if(!account.getStatus() || !account.getUser().getStatus()){
+            throw new IllegalArgumentException("The card with number "+cardNumber+" isn't valid right now.");
+        }
+        return account;
+    }
+
+    private Account validateAccountForWithdraw(TransactionRequestDTO request){
 
         String CVV = request.getCVV();
         String cardNumber = request.getCardNumber();
 
-        boolean isAccountExists = accountService.isAccountExists(cardNumber,CVV);
+        boolean isAccountExists = accountService.isAccountExistsByCardNumberAndCVV(cardNumber,CVV);
         if(!isAccountExists){
-            throw  new IllegalArgumentException("the card is not valid..");
+            throw new IllegalArgumentException("The card with number "+cardNumber+" isn't exist.");
         }
 
         Account account = accountRepository.findByCardNumber(cardNumber);
         if(!account.getStatus() || !account.getUser().getStatus()){
-            throw  new IllegalArgumentException("the card is not valid..");
+            throw new IllegalArgumentException("The card with number "+cardNumber+" isn't valid right now.");
         }
 
         return account;

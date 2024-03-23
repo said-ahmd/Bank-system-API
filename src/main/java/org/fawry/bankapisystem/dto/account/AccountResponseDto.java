@@ -1,4 +1,4 @@
-package org.fawry.bankapisystem.dto;
+package org.fawry.bankapisystem.dto.account;
 
 import java.sql.Timestamp;
 
@@ -9,7 +9,7 @@ public class AccountResponseDto {
     private Timestamp createdAt;
     private Boolean status;
 
-    public AccountResponseDto( String cardNumber, String CVV, double balance, Timestamp createdAt, Boolean status) {
+    public AccountResponseDto(String cardNumber, String CVV, double balance, Timestamp createdAt, Boolean status) {
         this.cardNumber = cardNumber;
         this.CVV = CVV;
         this.balance = balance;

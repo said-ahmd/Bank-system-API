@@ -19,19 +19,22 @@ public class ApplicationConf {
     public ApplicationConf(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+///
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration conf) throws Exception {
+
         return conf.getAuthenticationManager();
     }
     @Bean
     UserDetailsService userDetailsService(){
+
         return username ->
                 userRepository.findByEmail(username)
                         .orElseThrow( ()-> new UsernameNotFoundException("user not foutne"));
     }
     @Bean
     AuthenticationProvider authenticationProvider(){
+
 
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());

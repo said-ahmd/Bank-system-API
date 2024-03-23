@@ -1,7 +1,7 @@
 package org.fawry.bankapisystem.mapper;
 
-import org.fawry.bankapisystem.dto.AuthenticationResponse;
-import org.fawry.bankapisystem.dto.RegisterRequest;
+import org.fawry.bankapisystem.dto.auth.AuthenticationResponse;
+import org.fawry.bankapisystem.dto.auth.RegisterRequest;
 import org.fawry.bankapisystem.model.User;
 import org.fawry.bankapisystem.model.enumTypes.RoleType;
 import org.springframework.security.crypto.password.PasswordEncoder;

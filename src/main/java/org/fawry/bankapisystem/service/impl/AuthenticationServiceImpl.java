@@ -1,16 +1,16 @@
 package org.fawry.bankapisystem.service.impl;
 
-import org.fawry.bankapisystem.dto.AtuthenticationRequest;
-import org.fawry.bankapisystem.dto.AuthenticationResponse;
-import org.fawry.bankapisystem.dto.RegisterRequest;
+import org.fawry.bankapisystem.dto.auth.AtuthenticationRequest;
+import org.fawry.bankapisystem.dto.auth.AuthenticationResponse;
+import org.fawry.bankapisystem.dto.auth.RegisterRequest;
 import org.fawry.bankapisystem.mapper.AuthenticationMapper;
 import org.fawry.bankapisystem.model.User;
-import org.fawry.bankapisystem.repository.UserRepository;
 import org.fawry.bankapisystem.security.JWTService;
 import org.fawry.bankapisystem.service.AuthenticationService;
 import org.fawry.bankapisystem.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,6 +30,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        if(userService.existsUserEmailorPhone(registerRequest.getEmail(),registerRequest.getPhoneNumber())){
+            throw new IllegalArgumentException("The email or phone number already exists.");
+        }
 
         User user = authenticationMapper.toEntity(registerRequest);
         userService.saveUser(user);
@@ -43,11 +46,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 //        if(!user.getStatus()){
 //
 //        }
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                    atuthenticationRequest.getEmail(),
-                    atuthenticationRequest.getPassword()
-            )
+        Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        atuthenticationRequest.getEmail(),
+                        atuthenticationRequest.getPassword()
+                )
         );
 
         User user = userService.findUserByEmail(atuthenticationRequest.getEmail());

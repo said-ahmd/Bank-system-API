@@ -1,4 +1,4 @@
-package org.fawry.bankapisystem.dto;
+package org.fawry.bankapisystem.dto.auth;
 
 public class AtuthenticationRequest {
     private String email;
