@@ -5,19 +5,22 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 @Service
 public class JWTService {
 
-    private final String SECRET_KEY ="305c300d06092a864886f70d0101010500034b003048024100c3f9eeeb416425606f7604dd2185cea32306a8d183224047049d45c4ca9a9b834851b07df48d09ad1003d7faf01be9623c50710737ac89030e12da0787f294ef0203010001";
+    @Value("${application.security.jwt.secret-key}")
+    private String SECRET_KEY;
+    @Value("${application.security.jwt.expiration}")
+    private Long jwtEpiration;
+
+
     public String getUserEmail(String jwtToken) {
         return extractClaim(jwtToken,Claims->Claims.getSubject());
     }
@@ -29,12 +32,17 @@ public class JWTService {
             Map<String,Objects>exteraClaims,
             UserDetails userDetails
     ){
+
+        List<String> authorities = userDetails.getAuthorities().stream()
+                .map(grantedAuthority -> grantedAuthority.getAuthority())
+                .toList();
         return Jwts
                 .builder()
                 .setClaims(exteraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + (24*60*1000)) )
+                .setExpiration(new Date(System.currentTimeMillis() + jwtEpiration) )
+                .claim("authurities", authorities)
                 .signWith(getSignKey(), SignatureAlgorithm.HS512)
                 .compact();
     }

@@ -8,18 +8,18 @@ import org.hibernate.validator.constraints.UniqueElements;
 public class RegisterRequest {
 
     @NotEmpty(message = "First name shouldn't be empty.")
-    @Size(min = 2, message = "size must be at-least 2.")
+    @Size(min = 2, message = "First name must be at-least 2 characters.")
     private String firstName;
     private String lastName;
     @NotEmpty(message = "Email shouldn't be empty.")
     @Email(message = "Email should be valid.")
     private String email;
     @NotEmpty(message = "Password shouldn't be empty.")
-    @Min(value = 8, message = "Password should be 8 characters or more.")
+    @Size(min = 8, message = "Password should be 8 characters or more.")
     private String password;
     @NotEmpty(message = "Phone number shouldn't be empty.")
-    @Size(min = 11,max = 11, message = "The number should be 11 numbers.")
-    @Pattern(regexp = "^[0-9]+$",message = "Only numbers allowed.")
+    @Size(min = 11,max = 11, message = "Phone number should be 11 numbers.")
+    @Pattern(regexp = "^[0-9]+$",message = "Only numbers allowed for phone number.")
     private String phoneNumber;
 
     @NotEmpty(message = "Address shouldn't be empty.")

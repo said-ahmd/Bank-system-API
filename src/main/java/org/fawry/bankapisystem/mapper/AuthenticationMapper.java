@@ -18,7 +18,6 @@ public class AuthenticationMapper {
     }
 
     public User toEntity(RegisterRequest registerRequest){
-
         return new User(
                 registerRequest.getFirstName(),
                 registerRequest.getFirstName(),
@@ -30,11 +29,6 @@ public class AuthenticationMapper {
                 true,
                 new Timestamp(System.currentTimeMillis())
         );
-
-    }
-
-    public AuthenticationResponse toAuthenticationResponse(String token){
-        return new AuthenticationResponse(token);
     }
 
 }

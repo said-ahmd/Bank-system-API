@@ -6,13 +6,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -157,5 +158,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return status;
+    }
+
+    @Override
+    public String getName() {
+        return email;
     }
 }

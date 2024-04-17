@@ -1,27 +1,22 @@
 package org.fawry.bankapisystem.dto.auth;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class AtuthenticationRequest {
+
+    @NotEmpty(message = "Email shouldn't be empty.")
+    @Email(message = "Email should be valid.")
     private String email;
+    @NotEmpty(message = "Password shouldn't be empty.")
     private String password;
 
-    public AtuthenticationRequest(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

@@ -1,5 +1,6 @@
 package org.fawry.bankapisystem.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.fawry.bankapisystem.dto.account.AccountActivityResponseDto;
 import org.fawry.bankapisystem.dto.account.AccountResponseDto;
 import org.fawry.bankapisystem.dto.account.AccountTransactionsHistoryResponseDto;
@@ -26,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     private final TransactionRepository transactionRepository;
     private final AccountMapper accountMapper;
     private final TransactionMapper transactionMapper;
+
     public AccountServiceImpl(UserService userService, AccountCreatorService accountCreatorService, AccountRepository accountRepository, TransactionRepository transactionRepository, AccountMapper accountMapper, TransactionMapper transactionMapper) {
         this.userService = userService;
         this.accountCreatorService = accountCreatorService;
@@ -36,15 +38,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
     @Override
     public AccountResponseDto createAccount() {
         User user = userService.getCurrentUser();
         Account createdAccount = accountCreatorService.createAccount(user);
 
-        return  accountMapper.toResponse(createdAccount);
+        return accountMapper.toResponse(createdAccount);
     }
-
 
 
     @Override
@@ -79,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean isAccountExistsByCardNumberAndCVV(String cardNumber, String cvv) {
-        return  accountRepository.existsByCardNumberAndCVV(cardNumber,cvv);
+        return accountRepository.existsByCardNumberAndCVV(cardNumber, cvv);
     }
 
     @Override
@@ -88,7 +88,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountTransactionsHistoryResponseDto> accountTransactionHistroy(int cardId) {
-        return null;
+    public Account findAccountById(Long accountId) {
+        return accountRepository.findById(accountId)
+                .orElseThrow(()-> new EntityNotFoundException("Account not found"));
     }
+
 }

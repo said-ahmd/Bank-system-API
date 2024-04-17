@@ -19,5 +19,5 @@ public interface AccountService {
     boolean isAccountExistsByCardNumberAndCVV(String cardNumber,String cvv);
     boolean isAccountExistsByCardNumber(String cardNumber);
     //
-    List<AccountTransactionsHistoryResponseDto>accountTransactionHistroy(int cardId);
+    Account findAccountById(Long accountId);
 }

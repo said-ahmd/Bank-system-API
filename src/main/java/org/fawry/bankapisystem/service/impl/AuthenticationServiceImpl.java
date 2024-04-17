@@ -37,15 +37,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = authenticationMapper.toEntity(registerRequest);
         userService.saveUser(user);
         String token = jwtService.generateToken(user);
-        return authenticationMapper.toAuthenticationResponse(token);
+        
+        sendValidationEmail(user);
+        
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
+    }
+
+    private void sendValidationEmail(User user) {
     }
 
     @Override
     public AuthenticationResponse authenticate(AtuthenticationRequest atuthenticationRequest) {
-
-//        if(!user.getStatus()){
-//
-//        }
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         atuthenticationRequest.getEmail(),
@@ -53,8 +57,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 )
         );
 
-        User user = userService.findUserByEmail(atuthenticationRequest.getEmail());
+        User user = ((User)authenticate.getPrincipal());
         String token = jwtService.generateToken(user);
-        return authenticationMapper.toAuthenticationResponse(token);
+        System.out.println(token);
+        return AuthenticationResponse.builder()
+                .token(token)
+                .build();
     }
 }

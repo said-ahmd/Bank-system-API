@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/bank
+    username: root
+    password: saidahmd
+    driver-class-name: com.mysql.jdbc.Driver
+  application:
+    name: spring-boot-spring-security
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate.format_sql: true
+    database: mysql
+server:
+  port: 8081
+
+application:
+  security:
+    jwt:
+      secret-key: 305c300d06092a864886f70d0101010500034b003048024100c3f9416425606f7604dd2185cea32306a8d183224047049d45c4ca9a9b834851b07df48d09ad1003d7faf01be9623c50710737ac89030e12da0787f294ef0203010001
+      expiration: 1440000
