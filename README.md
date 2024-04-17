@@ -36,16 +36,16 @@ This is a Spring Boot application for a banking system that provides management 
 
 ### Entity-Relationship Diagram (ERD)
 
-```plaintext
+```mermaid
 erDiagram
 BANK_USER ||--o{ CARD : "has"
-BANK_USER {
+BANK_USER{
     int id pk
     string name
-    string password
+    string passward
     string email
     string phone_number
-    string address
+    string addrees
     string status
     string role
     date creation_date
@@ -62,10 +62,11 @@ CARD {
     date creation_date
 }
 
-TRANSACTION {
+TRANSACTION{
     int id pk
     int card_id fk
-    string type (deposit) (withdraw)
+    string type(deposite)(withdraw)
     int amount
     date time
 }
+
