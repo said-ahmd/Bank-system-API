@@ -1,6 +1,9 @@
 package org.fawry.bankapisystem.controller;
 
-import org.fawry.bankapisystem.dto.account.AccountResponseDto;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.fawry.bankapisystem.dto.account.AccountActivityResponse;
+import org.fawry.bankapisystem.dto.account.AccountResponse;
 import org.fawry.bankapisystem.dto.account.AccountTransactionsHistoryResponseDto;
 import org.fawry.bankapisystem.service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -11,26 +14,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bank/account")
+@RequiredArgsConstructor
 public class AccountControler {
 
     private final AccountService accountService;
 
-    public AccountControler(AccountService accountService) {
-        this.accountService = accountService;
-    }
-
-
     @PostMapping
-    public ResponseEntity<AccountResponseDto> createAccount(){
+    public ResponseEntity<AccountResponse> createAccount(){
 
-        AccountResponseDto createdAccount = accountService.createAccount();
+        AccountResponse createdAccount = accountService.createAccount();
         return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(createdAccount);
     }
     @GetMapping
-    public ResponseEntity<List<AccountResponseDto>> getUserAccounts(){
-        List<AccountResponseDto> userAccounts = accountService.getUserAccounts();
+    public ResponseEntity<List<AccountResponse>> getUserAccounts(){
 
         return ResponseEntity
                     .status(HttpStatus.OK)
@@ -39,18 +37,21 @@ public class AccountControler {
     @GetMapping("/{accountId}")
     public ResponseEntity<List<AccountTransactionsHistoryResponseDto>> getAccountHistory(@PathVariable Long accountId){
         List<AccountTransactionsHistoryResponseDto> transactionHistory = accountService.getUserAccountTransactions(accountId);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(transactionHistory);
     }
-//    public ResponseEntity<List<>>
-//    @GetMapping
-//    public ResponseEntity<List<AccountResponseDto>> getAccountById(@PathVariable Long id){
-//        List<AccountResponseDto> userAccounts = accountService.getUserAccounts();
-//
-//        return ResponseEntity
-//                    .status(HttpStatus.OK)
-//                    .body(userAccounts);
-//    }
+
+    @PutMapping(value = "/{cardNumber}", params = "activate")
+    public ResponseEntity<AccountActivityResponse>activateMyAccoutn(@Valid @PathVariable String cardNumber){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountService.activateAccount(cardNumber));
+    }
+    @PutMapping(value = "/{cardNumber}", params = "deactivate")
+    public ResponseEntity<AccountActivityResponse>deActivateMyAccoutn(@Valid @PathVariable String cardNumber){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(accountService.deactivateAccount(cardNumber));
+    }
 }

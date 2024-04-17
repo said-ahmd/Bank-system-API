@@ -29,23 +29,26 @@ public class JWTService {
     }
 
     public String generateToken(
-            Map<String,Objects>exteraClaims,
+            Map<String, Objects> extraClaims,
             UserDetails userDetails
     ){
 
-        List<String> authorities = userDetails.getAuthorities().stream()
+        String authority = userDetails.getAuthorities().stream()
+                .findFirst()
                 .map(grantedAuthority -> grantedAuthority.getAuthority())
-                .toList();
+                .orElse("");
+
         return Jwts
                 .builder()
-                .setClaims(exteraClaims)
+                .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtEpiration) )
-                .claim("authurities", authorities)
+                .claim("authorities", authority)
                 .signWith(getSignKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
+
     public String generateToken( UserDetails userDetails){
         return generateToken(new HashMap<>(),userDetails);
     }

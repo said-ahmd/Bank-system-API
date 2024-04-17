@@ -1,6 +1,7 @@
 package org.fawry.bankapisystem.service;
 
-import org.fawry.bankapisystem.model.Account;
+import org.fawry.bankapisystem.dto.UserActivityResponse;
+import org.fawry.bankapisystem.dto.UserResponse;
 import org.fawry.bankapisystem.model.User;
 
 import java.util.List;
@@ -10,8 +11,11 @@ public interface UserService {
 
     User saveUser(User user);
     User getCurrentUser();
-    boolean existsUserEmailorPhone(String email, String phoneNumber);
+    boolean existsUserEmailOrPhone(String email, String phoneNumber);
     ///deactivate - activate -  list accounts
+    List<UserResponse> getAllUsers();
 
+    UserResponse getProfileInfo();
+    UserActivityResponse deactivateMyUser();
 
 }

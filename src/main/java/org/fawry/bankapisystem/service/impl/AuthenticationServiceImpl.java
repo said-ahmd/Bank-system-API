@@ -30,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-        if(userService.existsUserEmailorPhone(registerRequest.getEmail(),registerRequest.getPhoneNumber())){
+        if(userService.existsUserEmailOrPhone(registerRequest.getEmail(),registerRequest.getPhoneNumber())){
             throw new IllegalArgumentException("The email or phone number already exists.");
         }
 
@@ -46,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void sendValidationEmail(User user) {
+        //createAndSaveToken()
     }
 
     @Override

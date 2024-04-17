@@ -18,17 +18,17 @@ public class AuthenticationMapper {
     }
 
     public User toEntity(RegisterRequest registerRequest){
-        return new User(
-                registerRequest.getFirstName(),
-                registerRequest.getFirstName(),
-                registerRequest.getEmail(),
-                registerRequest.getPhoneNumber(),
-                RoleType.ADMIN,
-                passwordEncoder.encode(registerRequest.getPassword()),
-                registerRequest.getAddress(),
-                true,
-                new Timestamp(System.currentTimeMillis())
-        );
+        return User.builder()
+            .firstName(registerRequest.getFirstName())
+            .lastName(registerRequest.getLastName())
+            .email(registerRequest.getEmail())
+            .phoneNumber(registerRequest.getEmail())
+            .password(passwordEncoder.encode(registerRequest.getPassword()))
+            .roleType(RoleType.USER)
+            .address(registerRequest.getAddress())
+            .status(true)
+            .createdAt(new Timestamp(System.currentTimeMillis()))
+            .build();
     }
 
 }

@@ -1,8 +1,8 @@
 package org.fawry.bankapisystem.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.fawry.bankapisystem.dto.account.AccountActivityResponseDto;
-import org.fawry.bankapisystem.dto.account.AccountResponseDto;
+import org.fawry.bankapisystem.dto.account.AccountActivityResponse;
+import org.fawry.bankapisystem.dto.account.AccountResponse;
 import org.fawry.bankapisystem.dto.account.AccountTransactionsHistoryResponseDto;
 import org.fawry.bankapisystem.mapper.AccountMapper;
 import org.fawry.bankapisystem.mapper.TransactionMapper;
@@ -16,6 +16,7 @@ import org.fawry.bankapisystem.service.AccountService;
 import org.fawry.bankapisystem.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public AccountResponseDto createAccount() {
+    public AccountResponse createAccount() {
         User user = userService.getCurrentUser();
         Account createdAccount = accountCreatorService.createAccount(user);
 
@@ -48,15 +49,26 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public List<AccountResponseDto> getUserAccounts() {
+    public List<AccountResponse> getUserAccounts() {
         User user = userService.getCurrentUser();
         List<Account> allUserAcounts = accountRepository.getAccountsByUserId(user.getId());
-        List<AccountResponseDto> accountsResponse = allUserAcounts.stream()
+        List<AccountResponse> accountsResponse = allUserAcounts.stream()
                 .map(account -> accountMapper.toResponse(account))
                 .toList();
 
         return accountsResponse;
     }
+
+//    @Override
+//    public List<AccountResponse> getUserAccountsByUserId(Long id) {
+//        List<Account> accounts = accountRepository.getAccountsByUserId(id);
+//        System.out.println(accounts);
+//        List<AccountResponse> accountResponses = accounts.stream()
+//                .map(account -> accountMapper.toResponse(account))
+//                .toList();
+//        System.out.println(accountResponses);
+//        return List.of(AccountResponse.builder().build());
+//    }
 
     @Override
     public List<AccountTransactionsHistoryResponseDto> getUserAccountTransactions(Long accountId) {
@@ -68,13 +80,35 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountActivityResponseDto deactivateAccount(int accountId) {
-        return null;
+    public AccountActivityResponse deactivateAccount(String cardNumber) {
+        Account account = accountRepository.findByCardNumber(cardNumber);
+        checkUserAuthentication(account);
+
+        if(account.getStatus()){
+            account.setStatus(false);
+            accountRepository.save(account);
+        }
+        return AccountActivityResponse.builder()
+                .message("The account deactivated")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
     }
 
+
+
     @Override
-    public AccountActivityResponseDto activateAccount(int accoutntId) {
-        return null;
+    public AccountActivityResponse activateAccount(String  cardNumber) {
+        Account account = accountRepository.findByCardNumber(cardNumber);
+        checkUserAuthentication(account);
+
+        if(!account.getStatus()){
+            account.setStatus(true);
+            accountRepository.save(account);
+        }
+        return AccountActivityResponse.builder()
+                .message("The account activated")
+                .timestamp(new Timestamp(System.currentTimeMillis()))
+                .build();
     }
 
     @Override
@@ -93,4 +127,10 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(()-> new EntityNotFoundException("Account not found"));
     }
 
+    private void checkUserAuthentication(Account account) {
+        User user = userService.getCurrentUser();
+        if (!account.getUser().equals(user)){
+            throw new IllegalArgumentException("Not Auth To See Transaction History");
+        }
+    }
 }
