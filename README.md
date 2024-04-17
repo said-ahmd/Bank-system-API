@@ -33,6 +33,13 @@ This is a Spring Boot application for a banking system that provides management 
         - Note
         - Creation date
         - Associated account
+## API Documentation
+Explore our API endpoints using Swagger UI:
+[Swagger UI](http://localhost:8081/swagger-ui/index.html#/)
+
+Note: Make sure your server is running to access the Swagger UI.
+
+---
 
 ### Entity-Relationship Diagram (ERD)
 
