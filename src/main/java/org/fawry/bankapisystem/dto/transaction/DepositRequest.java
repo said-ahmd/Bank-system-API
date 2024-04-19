@@ -4,8 +4,14 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import lombok.*;
 
-public class DepositRequistDTO {
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class DepositRequest {
 
     @Positive(message = "The amount should be positive.")
     @Min(value = 5, message = "The amount should be greater than 5.")
@@ -15,24 +21,4 @@ public class DepositRequistDTO {
     @Pattern(regexp = "^[0-9]+$", message = "The card number should be only numbers.")
     private String cardNumber;
 
-    public DepositRequistDTO(double amount, String cardNumber) {
-        this.amount = amount;
-        this.cardNumber = cardNumber;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
 }

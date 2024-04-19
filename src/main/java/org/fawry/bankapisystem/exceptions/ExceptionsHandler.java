@@ -2,10 +2,8 @@ package org.fawry.bankapisystem.exceptions;
 
 
 import jakarta.mail.MessagingException;
-import org.fawry.bankapisystem.dto.error.Error;
 import org.fawry.bankapisystem.dto.error.ExceptionResponse;
 import org.fawry.bankapisystem.mapper.ErrorMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -13,22 +11,14 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class ExceptionsHandler {
-    final private ErrorMapper errorMapper;
-    private Map<String ,String> errors;
 
-
-    public ExceptionsHandler(ErrorMapper errorMapper) {
-        this.errorMapper = errorMapper;
-    }
 
     @ExceptionHandler(LockedException.class)
     public ResponseEntity<ExceptionResponse> handelException(LockedException exp){
@@ -104,9 +94,9 @@ public class ExceptionsHandler {
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .body(
-                    ExceptionResponse.builder()
-                        .error(exp.getMessage())
-                        .build()
+                        ExceptionResponse.builder()
+                                .error(exp.getMessage())
+                                .build()
                 );
     }
 
@@ -116,10 +106,10 @@ public class ExceptionsHandler {
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
-                    ExceptionResponse.builder()
-                            .exceptionDescription("Internal error, contact admin")
-                            .error(exp.getMessage())
-                            .build()
+                        ExceptionResponse.builder()
+                                .exceptionDescription("Internal error, contact admin")
+                                .error(exp.getMessage())
+                                .build()
                 );
     }
 

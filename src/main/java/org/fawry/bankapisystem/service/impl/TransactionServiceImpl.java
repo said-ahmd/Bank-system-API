@@ -1,7 +1,7 @@
 package org.fawry.bankapisystem.service.impl;
 
-import org.fawry.bankapisystem.dto.transaction.DepositRequistDTO;
-import org.fawry.bankapisystem.dto.transaction.TransactionRequestDTO;
+import org.fawry.bankapisystem.dto.transaction.DepositRequest;
+import org.fawry.bankapisystem.dto.transaction.WithdrawRequest;
 import org.fawry.bankapisystem.model.Account;
 import org.fawry.bankapisystem.model.Transaction;
 import org.fawry.bankapisystem.model.enumTypes.TransactionType;
@@ -30,52 +30,51 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void deposit(DepositRequistDTO request) {
+    public void deposit(DepositRequest request) {
         Account account = validateAccountForDeposit(request);
         doDeposit(account,request.getAmount());
     }
 
 
     @Override
-    public void withdraw(TransactionRequestDTO request) {
+    public void withdraw(WithdrawRequest request) {
         Account account = validateAccountForWithdraw(request);
         doWithdraw(account,request.getAmount());
-
     }
 
     public void doDeposit(Account account,double amount){
         account.setBalance(amount+account.getBalance());
         String transactionDescriptions="Deposit "+amount+" to "+account.getUser().getEmail();
 
-        Transaction transaction=new Transaction(
-                TransactionType.DEPOSIT,
-                amount,
-                transactionDescriptions,
-                new Timestamp(System.currentTimeMillis()),
-                account
-        );
-
-        transactionRepository.save(transaction);
+        transactionRepository.save(Transaction.builder()
+                        .transactionType(TransactionType.DEPOSIT)
+                        .amount(amount)
+                        .description(transactionDescriptions)
+                        .createdAt(new Timestamp(System.currentTimeMillis()))
+                        .account(account)
+                .build());
     }
 
     private void doWithdraw(Account account, double amount) {
-        if (account.getBalance()< amount){
-            throw new IllegalArgumentException("The balance isn't enough to withdraw "+account);
+
+        if (account.getBalance() < amount){
+            throw new IllegalArgumentException("The balance isn't enough to withdraw "+amount);
         }
+
+        account.setBalance(amount-account.getBalance());
         String transactionDescriptions="Withdraw "+amount+" from "+account.getUser().getEmail();
 
-        account.setBalance(account.getBalance()-amount);
-        Transaction transaction = new Transaction(
-                TransactionType.WITHDRAW,
-                amount,
-                transactionDescriptions,
-                new Timestamp(System.currentTimeMillis()),
-                account
-        );
-        transactionRepository.save(transaction);
+
+        transactionRepository.save(Transaction.builder()
+                .transactionType(TransactionType.WITHDRAW)
+                .amount(amount)
+                .description(transactionDescriptions)
+                .createdAt(new Timestamp(System.currentTimeMillis()))
+                .account(account)
+                .build());
     }
 
-    private Account validateAccountForDeposit(DepositRequistDTO request) {
+    private Account validateAccountForDeposit(DepositRequest request) {
         String cardNumber = request.getCardNumber();
         boolean isAccountExisits = accountRepository.existsByCardNumber(cardNumber);
         if(!isAccountExisits){
@@ -88,14 +87,14 @@ public class TransactionServiceImpl implements TransactionService {
         return account;
     }
 
-    private Account validateAccountForWithdraw(TransactionRequestDTO request){
+    private Account validateAccountForWithdraw(WithdrawRequest request){
 
         String CVV = request.getCVV();
         String cardNumber = request.getCardNumber();
 
         boolean isAccountExists = accountService.isAccountExistsByCardNumberAndCVV(cardNumber,CVV);
         if(!isAccountExists){
-            throw new IllegalArgumentException("The card with number "+cardNumber+" isn't exist.");
+            throw new IllegalArgumentException("There is a wrong in the card number: "+cardNumber+" or in the CVV: "+CVV);
         }
 
         Account account = accountRepository.findByCardNumber(cardNumber);

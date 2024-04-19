@@ -39,7 +39,7 @@ public class SecurityConf {
                 ,"/swagger-ui/**")
                 .permitAll()
                 .anyRequest()
-                .permitAll()
+                .authenticated()
             )
            .sessionManagement(
                 session-> session
